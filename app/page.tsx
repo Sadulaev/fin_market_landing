@@ -7,19 +7,39 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Phone, MapPin, Instagram, MessageCircle } from "lucide-react"
+import { useSearchParams } from "next/navigation"
+import { decodeValue } from "@/lib/utils"
 
 export default function InstallmentCalculator() {
-  const [productPrice, setProductPrice] = useState([100000])
-  const [downPayment, setDownPayment] = useState([20000])
-  const [installmentPeriod, setInstallmentPeriod] = useState([12])
+  const [productPrice, setProductPrice] = useState([100000]) // Начальная цена товара
+  const [downPayment, setDownPayment] = useState([20000]) // Начальный взнос
+  const [installmentPeriod, setInstallmentPeriod] = useState([12]) // Срок рассрочки в месяцах
 
-  const monthlyPayment = (productPrice[0] - downPayment[0]) / installmentPeriod[0]
-  const overpaymentPerMonth = 0 // Без переплат
-  const totalAmount = productPrice[0] - downPayment[0]
+  const interestRate = 0.05; // 5% годовых
+  const monthlyRate = interestRate; 
+
+  const principal = productPrice[0] - downPayment[0];
+  const n = installmentPeriod[0];
+
+  const monthlyPayment = principal > 0 && n > 0
+    ? Math.round(
+      principal *
+      (monthlyRate * Math.pow(1 + monthlyRate, n)) /
+      (Math.pow(1 + monthlyRate, n) - 1)
+    )
+    : 0;
+
+  const totalAmount = monthlyPayment * n;
+  const overpaymentPerMonth = monthlyPayment - Math.round(principal / n);
 
   const scrollToSection = (sectionId: string) => {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" })
   }
+
+  const sp = useSearchParams();
+  const kParam = sp.get('k'); // например ?k=eyJ2Ijo1fQ.d6ab1234
+
+  const value = kParam ? decodeValue(kParam) : null;
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#1a1a1a" }}>
@@ -68,8 +88,8 @@ export default function InstallmentCalculator() {
         <div className="max-w-4xl mx-auto">
           <Card className="shadow-xl" style={{ backgroundColor: "#2d2d2d", border: "1px solid #747474" }}>
             <CardHeader>
-              <CardTitle className="text-2xl text-center" style={{ color: "#f8f9fa" }}>
-                Параметры рассрочки
+              <CardTitle className="text-2xl text-center text-white">
+                Удобный калькулятор для расчета ежемесячного платежа
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-8">
@@ -85,12 +105,13 @@ export default function InstallmentCalculator() {
                     onChange={(e) => setProductPrice([Number(e.target.value)])}
                     className="w-48 text-2xl h-12 font-semibold appearance-none [moz-appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                     style={{
-                      borderColor: "#C4C4C4",
+                      borderColor: "#14A76C",
                       backgroundColor: "#1a1a1a",
                       color: "#f8f9fa",
+                      fontSize: "1.5rem",
                     }}
                   />
-                  <span className="text-xl" style={{ color: "#C4C4C4" }}>
+                  <span className="text-2xl" style={{ color: "#C4C4C4" }}>
                     ₽
                   </span>
                 </div>
@@ -102,7 +123,7 @@ export default function InstallmentCalculator() {
                   step={5000}
                   className="w-full"
                 />
-                <div className="flex justify-between text-sm" style={{ color: "#C4C4C4" }}>
+                <div className="flex justify-between text-lg" style={{ color: "#C4C4C4" }}>
                   <span>10 000 ₽</span>
                   <span>1 000 000 ₽</span>
                 </div>
@@ -120,15 +141,16 @@ export default function InstallmentCalculator() {
                     onChange={(e) => setDownPayment([Number(e.target.value)])}
                     className="w-48 text-2xl h-12 font-semibold appearance-none [moz-appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                     style={{
-                      borderColor: "#C4C4C4",
+                      borderColor: "#14A76C",
                       backgroundColor: "#1a1a1a",
                       color: "#f8f9fa",
+                      fontSize: "1.5rem",
                     }}
                   />
-                  <span className="text-xl" style={{ color: "#C4C4C4" }}>
+                  <span className="text-2xl" style={{ color: "#C4C4C4" }}>
                     ₽
                   </span>
-                  <span className="text-sm" style={{ color: "#C4C4C4" }}>
+                  <span className="text-lg" style={{ color: "#C4C4C4" }}>
                     ({((downPayment[0] / productPrice[0]) * 100).toFixed(1)}%)
                   </span>
                 </div>
@@ -140,8 +162,8 @@ export default function InstallmentCalculator() {
                   step={1000}
                   className="w-full"
                 />
-                <div className="flex justify-between text-sm" style={{ color: "#C4C4C4" }}>
-                  <span>0 ₽</span>
+                <div className="flex justify-between text-lg" style={{ color: "#C4C4C4" }}>
+                  <span className="text-2xl">0 ₽</span>
                   <span>{(productPrice[0] * 0.8).toLocaleString()} ₽</span>
                 </div>
               </div>
@@ -158,12 +180,13 @@ export default function InstallmentCalculator() {
                     onChange={(e) => setInstallmentPeriod([Number(e.target.value)])}
                     className="w-48 text-2xl h-12 font-semibold appearance-none [moz-appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                     style={{
-                      borderColor: "#C4C4C4",
+                      borderColor: "#14A76C",
                       backgroundColor: "#1a1a1a",
                       color: "#f8f9fa",
+                      fontSize: "1.5rem",
                     }}
                   />
-                  <span className="text-xl" style={{ color: "#C4C4C4" }}>
+                  <span className="text-2xl" style={{ color: "#C4C4C4" }}>
                     месяцев
                   </span>
                 </div>
@@ -175,13 +198,13 @@ export default function InstallmentCalculator() {
                   step={1}
                   className="w-full"
                 />
-                <div className="flex justify-between text-sm" style={{ color: "#C4C4C4" }}>
+                <div className="flex justify-between text-lg" style={{ color: "#C4C4C4" }}>
                   <span>1 месяца</span>
                   <span>12 месяцев</span>
                 </div>
               </div>
 
-              <div className="p-6 rounded-lg border-2" style={{ backgroundColor: "#3a3a3a", borderColor: "#FFE400" }}>
+              <div className="p-6 rounded-lg border-2" style={{ backgroundColor: "#3a3a3a", borderColor: "#14A76C" }}>
                 <div className="grid md:grid-cols-2 gap-8">
                   {/* Левая часть - параметры и итоговая сумма */}
                   <div className="space-y-4">
@@ -209,7 +232,7 @@ export default function InstallmentCalculator() {
                       <p className="text-lg" style={{ color: "#C4C4C4" }}>
                         Ежемесячный платеж:
                       </p>
-                      <p className="text-4xl font-bold" style={{ color: "#FF652F" }}>
+                      <p className="text-4xl font-bold" style={{ color: "#14A76C" }}>
                         {monthlyPayment.toLocaleString("ru-RU", {
                           minimumFractionDigits: 0,
                           maximumFractionDigits: 0,
@@ -221,7 +244,7 @@ export default function InstallmentCalculator() {
                       <p className="text-sm" style={{ color: "#C4C4C4" }}>
                         Переплата в месяц:
                       </p>
-                      <p className="text-xl font-semibold" style={{ color: "#14A76C" }}>
+                      <p className="text-xl font-semibold text-white">
                         {overpaymentPerMonth} ₽
                       </p>
                     </div>
@@ -350,7 +373,7 @@ export default function InstallmentCalculator() {
           <div className="grid lg:grid-cols-2 gap-12">
             {/* Contact Info */}
             <div className="space-y-8">
-              <Card style={{ backgroundColor: "#2d2d2d", border: "1px solid #C4C4C4" }}>
+              <Card style={{ backgroundColor: "#2d2d2d", border: "1px solid #747474" }}>
                 <CardContent className="p-6">
                   <div className="space-y-6">
                     <div className="flex items-center space-x-4">
@@ -420,7 +443,7 @@ export default function InstallmentCalculator() {
                     </div>
                   </div>
 
-                  <div className="mt-8 pt-6 border-t" style={{ borderColor: "#C4C4C4" }}>
+                  <div className="mt-8 pt-6 border-t" style={{ borderColor: "#747474" }}>
                     <p className="text-sm mb-4" style={{ color: "#b0b0b0" }}>
                       Режим работы:
                     </p>
@@ -435,7 +458,7 @@ export default function InstallmentCalculator() {
 
             {/* Map */}
             <div className="space-y-4">
-              <Card style={{ backgroundColor: "#2d2d2d", border: "1px solid #C4C4C4" }}>
+              <Card style={{ backgroundColor: "#2d2d2d", border: "1px solid #747474" }}>
                 <CardContent className="p-0">
                   <div
                     className="h-96 rounded-lg flex items-center justify-center"
