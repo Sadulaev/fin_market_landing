@@ -36,10 +36,10 @@ export default function InstallmentCalculator() {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" })
   }
 
-  const sp = useSearchParams();
-  const kParam = sp.get('k'); // например ?k=eyJ2Ijo1fQ.d6ab1234
+  // const sp = useSearchParams();
+  // const kParam = sp.get('k'); // например ?k=eyJ2Ijo1fQ.d6ab1234
 
-  const value = kParam ? decodeValue(kParam) : null;
+  // const value = kParam ? decodeValue(kParam) : null;
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#1a1a1a" }}>
