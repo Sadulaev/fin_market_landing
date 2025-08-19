@@ -178,7 +178,7 @@ export default function InstallmentCalculator() {
                 <Slider
                   value={[firstPayment]}
                   onValueChange={(v) => setFirstPayment(v[0])}
-                  max={(cost * 0.8).toFixed(1)}
+                  max={Number((cost * 0.8).toFixed(1))}
                   min={0}
                   step={1000}
                   className="w-full"
