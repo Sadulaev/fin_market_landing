@@ -10,9 +10,9 @@ import { Phone, MapPin, Instagram, MessageCircle } from "lucide-react"
 import { YMaps, Map } from '@pbe/react-yandex-maps';
 
 export default function InstallmentCalculator() {
-  const [cost, setCost] = useState<number>(10000);
+  const [cost, setCost] = useState<number>(0);
   const [firstPayment, setFirstPayment] = useState<number>(0);
-  const [period, setPeriod] = useState<number>(1);
+  const [period, setPeriod] = useState<number>(0);
 
   const onChangeCost = (newCost: number, currentFirstPayment: number) => {
     if (newCost <= 1000000 && !isNaN(newCost)) {
