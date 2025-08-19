@@ -1,27 +1,76 @@
 "use client"
 
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Slider } from "@/components/ui/slider"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Phone, MapPin, Instagram, MessageCircle } from "lucide-react"
-import dynamic from 'next/dynamic';
 import { YMaps, Map } from '@pbe/react-yandex-maps';
 
-const CityMap = dynamic(() => import('@/components/city-map'), {
-  ssr: false,
-});
-
 export default function InstallmentCalculator() {
-  const [productPrice, setProductPrice] = useState([100000])
-  const [downPayment, setDownPayment] = useState([20000])
-  const [installmentPeriod, setInstallmentPeriod] = useState([12])
+  const [cost, setCost] = useState<number>(10000);
+  const [firstPayment, setFirstPayment] = useState<number>(0);
+  const [period, setPeriod] = useState<number>(1);
 
-  const monthlyPayment = (productPrice[0] - downPayment[0]) / installmentPeriod[0]
-  const overpaymentPerMonth = 0 // Без переплат
-  const totalAmount = productPrice[0] - downPayment[0]
+  const onChangeCost = (newCost: number, currentFirstPayment: number) => {
+    if (newCost <= 1000000 && !isNaN(newCost)) {
+      setCost(parseInt(newCost.toString(), 10));
+      if (currentFirstPayment > (newCost * 0.8)) {
+        setFirstPayment(newCost * 0.8)
+      }
+    }
+  }
+
+  const onChangeFirstPayment = (newPayment: number, currentCost: number) => {
+    if (newPayment <= currentCost * 0.8 && !isNaN(newPayment)) {
+      setFirstPayment(newPayment);
+    }
+  }
+
+  const onChangePeriod = (newPeriod: number) => {
+    if (newPeriod <= 12 && !isNaN(newPeriod)) {
+      setPeriod(newPeriod)
+    }
+  }
+
+  const result = useMemo(() => {
+    if(period <= 0 || cost <= 0) {
+      return {
+        montlyPayment: 0,
+        summaryPayment: 0,
+        monthlyAdditionalPayment: 0,
+      }
+    }
+    const countedSum = firstPayment >= (cost / 2) ? cost / 2 : cost;
+    const additionalPercent = firstPayment > 0 ? 0 : 5;
+    if (period <= 3) {
+      return {
+        montlyPayment: (cost + ((countedSum / 100 * (15 + additionalPercent)) * period)) / period,
+        summaryPayment: cost + ((countedSum / 100 * (15 + additionalPercent)) * period),
+        monthlyAdditionalPayment: (countedSum / 100 * (15 + additionalPercent)),
+      }
+    } else if (period <= 6) {
+      return {
+        montlyPayment: (cost + ((countedSum / 100 * (25 + additionalPercent)) * period)) / period,
+        summaryPayment: cost + ((countedSum / 100 * (25 + additionalPercent)) * period),
+        monthlyAdditionalPayment: (countedSum / 100 * (25 + additionalPercent)),
+      }
+    } else if (period <= 8) {
+      return {
+        montlyPayment: (cost + ((countedSum / 100 * (35 + additionalPercent)) * period)) / period,
+        summaryPayment: cost + ((countedSum / 100 * (35 + additionalPercent)) * period),
+        monthlyAdditionalPayment: (countedSum / 100 * (35 + additionalPercent)),
+      }
+    } else if (period === 12) {
+      return {
+        montlyPayment: (cost + ((countedSum / 100 * (45 + additionalPercent)) * period)) / period,
+        summaryPayment: cost + ((countedSum / 100 * (45 + additionalPercent)) * period),
+        monthlyAdditionalPayment: (countedSum / 100 * (45 + additionalPercent)),
+      }
+    }
+  }, [cost, firstPayment, period])
 
   const scrollToSection = (sectionId: string) => {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" })
@@ -41,28 +90,19 @@ export default function InstallmentCalculator() {
             <div className="hidden md:flex space-x-8">
               <button
                 onClick={() => scrollToSection("calculator")}
-                className="transition-colors"
-                style={{ color: "#f8f9fa" }}
-                onMouseEnter={(e) => (e.target.style.color = "#10B981")}
-                onMouseLeave={(e) => (e.target.style.color = "#f8f9fa")}
+                className="transition-colors text-gray-accent hover:text-gold cursor-pointer"
               >
                 Калькулятор
               </button>
               <button
                 onClick={() => scrollToSection("conditions")}
-                className="transition-colors"
-                style={{ color: "#f8f9fa" }}
-                onMouseEnter={(e) => (e.target.style.color = "#10B981")}
-                onMouseLeave={(e) => (e.target.style.color = "#f8f9fa")}
+                className="transition-colors text-gray-accent hover:text-gold cursor-pointer"
               >
                 Условия
               </button>
               <button
                 onClick={() => scrollToSection("contacts")}
-                className="transition-colors"
-                style={{ color: "#f8f9fa" }}
-                onMouseEnter={(e) => (e.target.style.color = "#10B981")}
-                onMouseLeave={(e) => (e.target.style.color = "#f8f9fa")}
+                className="transition-colors text-gray-accent hover:text-gold cursor-pointer"
               >
                 Контакты
               </button>
@@ -88,9 +128,10 @@ export default function InstallmentCalculator() {
                 </Label>
                 <div className="flex items-center space-x-4">
                   <Input
-                    type="number"
-                    value={productPrice[0]}
-                    onChange={(e) => setProductPrice([Number(e.target.value)])}
+                    inputMode="numeric"
+                    type="text"
+                    value={cost}
+                    onChange={(e) => onChangeCost(Number(e.target.value), firstPayment)}
                     className="w-48 text-xl h-12 text-white font-semibold border-gray-accent bg-gray-medium"
                   />
                   <span className="text-2xl text-gray-accent">
@@ -98,8 +139,8 @@ export default function InstallmentCalculator() {
                   </span>
                 </div>
                 <Slider
-                  value={productPrice}
-                  onValueChange={setProductPrice}
+                  value={[cost]}
+                  onValueChange={(v) => onChangeCost(v[0], firstPayment)}
                   max={1000000}
                   min={10000}
                   step={5000}
@@ -118,29 +159,33 @@ export default function InstallmentCalculator() {
                 </Label>
                 <div className="flex items-center space-x-4">
                   <Input
-                    type="number"
-                    value={downPayment[0]}
-                    onChange={(e) => setDownPayment([Number(e.target.value)])}
+                    inputMode="numeric"
+                    type="text"
+                    value={firstPayment}
+                    onChange={(e) => onChangeFirstPayment(Number(e.target.value), cost)}
                     className="w-48 text-xl h-12 text-white font-semibold border-gray-accent bg-gray-medium"
                   />
                   <span className="text-2xl text-gray-accent">
                     ₽
                   </span>
-                  <span className="text-md text-gray-accent">
-                    ({((downPayment[0] / productPrice[0]) * 100).toFixed(1)}%)
-                  </span>
+                  {cost > 0 && (
+                    <span className="text-md text-gray-accent">
+                      ({((firstPayment / cost) * 100).toFixed(1)}%)
+                    </span>
+                  )}
+
                 </div>
                 <Slider
-                  value={downPayment}
-                  onValueChange={setDownPayment}
-                  max={productPrice[0] * 0.8}
+                  value={[firstPayment]}
+                  onValueChange={(v) => setFirstPayment(v[0])}
+                  max={(cost * 0.8).toFixed(1)}
                   min={0}
                   step={1000}
                   className="w-full"
                 />
                 <div className="flex justify-between text-md text-gray-accent">
                   <span>0 ₽</span>
-                  <span>{(productPrice[0] * 0.8).toLocaleString()} ₽</span>
+                  <span>{(cost * 0.8).toLocaleString()} ₽</span>
                 </div>
               </div>
 
@@ -151,9 +196,10 @@ export default function InstallmentCalculator() {
                 </Label>
                 <div className="flex items-center space-x-4">
                   <Input
-                    type="number"
-                    value={installmentPeriod[0]}
-                    onChange={(e) => setInstallmentPeriod([Number(e.target.value)])}
+                    inputMode="numeric"
+                    type="text"
+                    value={period}
+                    onChange={(e) => onChangePeriod(Number(e.target.value))}
                     className="w-48 text-xl h-12 text-white font-semibold border-gray-accent bg-gray-medium"
                   />
                   <span className="text-xl text-gray-accent">
@@ -161,16 +207,16 @@ export default function InstallmentCalculator() {
                   </span>
                 </div>
                 <Slider
-                  value={installmentPeriod}
-                  onValueChange={setInstallmentPeriod}
-                  max={36}
-                  min={3}
+                  value={[period]}
+                  onValueChange={(v) => setPeriod(v[0])}
+                  max={12}
+                  min={1}
                   step={1}
                   className="w-full"
                 />
                 <div className="flex justify-between text-md text-gray-accent">
-                  <span>3 месяца</span>
-                  <span>36 месяцев</span>
+                  <span>1 месяца</span>
+                  <span>12 месяцев</span>
                 </div>
               </div>
 
@@ -182,16 +228,16 @@ export default function InstallmentCalculator() {
                       Ваш выбор:
                     </h3>
                     <div className="space-y-2 text-sm text-gray-accent">
-                      <p>Стоимость товара: {productPrice[0].toLocaleString()} ₽</p>
-                      <p>Первоначальный взнос: {downPayment[0].toLocaleString()} ₽</p>
-                      <p>Срок рассрочки: {installmentPeriod[0]} мес.</p>
+                      <p>Стоимость товара: {cost.toLocaleString()} ₽</p>
+                      <p>Первоначальный взнос: {firstPayment.toLocaleString()} ₽</p>
+                      <p>Срок рассрочки: {period} мес.</p>
                     </div>
                     <div className="pt-4 border-t" style={{ borderColor: "#808080" }}>
                       <p className="text-sm text-gray-accent">
                         Итоговая сумма:
                       </p>
                       <p className="text-2xl font-bold text-gold-light">
-                        {totalAmount.toLocaleString()} ₽
+                        {result?.summaryPayment.toLocaleString()} ₽
                       </p>
                     </div>
                   </div>
@@ -203,7 +249,7 @@ export default function InstallmentCalculator() {
                         Ежемесячный платеж:
                       </p>
                       <p className="text-4xl font-bold text-gold-light">
-                        {monthlyPayment.toLocaleString("ru-RU", {
+                        {result?.montlyPayment.toLocaleString("ru-RU", {
                           minimumFractionDigits: 0,
                           maximumFractionDigits: 0,
                         })}{" "}
@@ -215,7 +261,7 @@ export default function InstallmentCalculator() {
                         Переплата в месяц:
                       </p>
                       <p className="text-xl font-semibold text-gold-light">
-                        {overpaymentPerMonth} ₽
+                        {result?.monthlyAdditionalPayment} ₽
                       </p>
                     </div>
                   </div>
@@ -427,7 +473,7 @@ export default function InstallmentCalculator() {
             {/* Map */}
             <div className="space-y-4 rounded-2xl overflow-hidden">
               <YMaps>
-                  <Map defaultState={{ center: [55.75, 37.57], zoom: 9 }}className="w-full h-full" />
+                <Map defaultState={{ center: [55.75, 37.57], zoom: 9 }} className="w-full h-full" />
               </YMaps>
             </div>
           </div>
