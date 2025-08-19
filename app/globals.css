@@ -1,46 +1,85 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
+/* Light (300) */
 @font-face {
-  font-family: 'Playfair Display SC';
-  src: url('/fonts/PlayfairDisplaySC-Black.ttf') format('truetype');
-  font-weight: 400;
+  font-family: 'Exo2';
+  src: url('/public/fonts/Exo2-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Exo2';
+  src: url('/public/fonts/Exo2-LightItalic.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
 }
 
+/* Regular (400) */
 @font-face {
-  font-family: 'Playfair Display SC';
-  src: url('/fonts/PlayfairDisplaySC-Regular.ttf') format('truetype');
+  font-family: 'Exo2';
+  src: url('/fonts/Exo2-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Exo2';
+  src: url('/fonts/Exo2-RegularItalic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Medium (500) */
+@font-face {
+  font-family: 'Exo2';
+  src: url('/fonts/Exo2-Medium.ttf') format('truetype');
   font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Exo2';
+  src: url('/fonts/Exo2-MediumItalic.ttf') format('truetype');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
 }
 
+/* Bold (700) */
 @font-face {
-  font-family: 'Playfair Display SC';
-  src: url('/fonts/PlayfairDisplaySC-Bold.ttf') format('truetype');
+  font-family: 'Exo2';
+  src: url('/fonts/Exo2-Bold.ttf') format('truetype');
   font-weight: 700;
+  font-style: normal;
+  font-display: swap;
 }
-/* 
 @font-face {
-  font-family: 'Playfair Display SC';
-  src: url('/fonts/PlayfairDisplaySC-BlackItalic.ttf') format('truetype');
-  font-stlye: italic;
-  font-weight: 400;
-}
-
-@font-face {
-  font-family: 'Playfair Display SC';
-  src: url('/fonts/PlayfairDisplaySC-Italic.ttf') format('truetype');
-  font-stlye: italic;
-  font-weight: 400;
-}
-
-@font-face {
-  font-family: 'Playfair Display SC';
-  src: url('/fonts/PlayfairDisplaySC-BoldItalic.ttf') format('truetype');
-  font-stlye: italic;
+  font-family: 'Exo2';
+  src: url('/fonts/Exo2-BoldItalic.ttf') format('truetype');
   font-weight: 700;
-} */
+  font-style: italic;
+  font-display: swap;
+}
 
-
+/* Black (900) */
+@font-face {
+  font-family: 'Exo2';
+  src: url('/fonts/Exo2-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Exo2';
+  src: url('/fonts/Exo2-BlackItalic.ttf') format('truetype');
+  font-weight: 900;
+  font-style: italic;
+  font-display: swap;
+}
 
 @custom-variant dark (&:is(.dark *));
 
@@ -78,6 +117,16 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* custom colors */
+  --gray-dark: #2C2C2C;
+  --gray-medium: #4A4A4A;
+  --gray-accent: #B0B0B0;
+  --white-ease: #F5F5F5;
+  --white: #FFFFFF;
+  --gold: #D4AF37;
+  --gold-light: #F0E68C;
+  --gold-dark: #B8860B;
 }
 
 .dark {
@@ -113,6 +162,16 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(0.269 0 0);
   --sidebar-ring: oklch(0.439 0 0);
+
+  /* custom colors */
+  --gray-dark: #2C2C2C;
+  --gray-medium: #4A4A4A;
+  --gray-accent: #B0B0B0;
+  --white-ease: #F5F5F5;
+  --white: #FFFFFF;
+  --gold: #D4AF37;
+  --gold-light: #F0E68C;
+  --gold-dark: #B8860B;
 }
 
 @theme inline {
@@ -153,15 +212,33 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  /* font PlaifairDisplay */
-  --font-playfair-display-sc: 'Playfair Display SC', serif;
+  /* custom colors */
+  --color-gray-dark: var(--gray-dark);
+  --color-gray-medium: var(--gray-medium);
+  --color-gray-accent: var(--gray-accent);
+  --color-white-ease: var(--white-ease);
+  --color-white: var(--white);
+  --color-gold: var(--gold);
+  --color-gold-light: var(--gold-light);
+  --color-gold-dark: var(--gold-dark);
 }
 
 @layer base {
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .leaflet-map {
+    height: 420px;
+    width: 100%;
+  }
   * {
     @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
+    font-family: 'Exo2', sans-serif;
+    font-weight: 400;
   }
 }
