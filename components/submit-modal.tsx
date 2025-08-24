@@ -12,6 +12,9 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
+import { Calendar } from "./ui/calendar"
+import { CalendarIcon } from "lucide-react"
+import { ru } from 'react-day-picker/locale'
 
 type Props = {
     open: boolean;
@@ -25,6 +28,14 @@ function SubmitModal({ open, onOpenChange }: Props) {
         phone: "",
         date: undefined as Date | undefined,
     })
+    const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+
+    const getNextMonthDateRange = () => {
+        const today = new Date()
+        const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1)
+        const lastDayOfNextMonth = new Date(today.getFullYear(), today.getMonth() + 2, 0)
+        return { from: nextMonth, to: lastDayOfNextMonth }
+    }
 
     const formatPhoneNumber = (value: string) => {
         const cleaned = value.replace(/\D/g, "")
@@ -70,12 +81,46 @@ function SubmitModal({ open, onOpenChange }: Props) {
                                 className="bg-gray-medium border-gray-accent placeholder:text-gray-400"
                             />
                         </div>
+                        <div className="space-y-4">
+                            <Label className="" style={{ color: "#f8f9fa" }}>
+                                Дата первого платежа
+                            </Label>
+                            <div className="flex flex-col items-center space-y-4">
+                                <div className="flex items-center space-x-4">
+                                    <CalendarIcon className="h-6 w-6" style={{ color: "#10B981" }} />
+                                    <span className="text-lg" style={{ color: "#808080" }}>
+                                        {selectedDate
+                                            ? selectedDate.toLocaleDateString("ru-RU", {
+                                                day: "numeric",
+                                                month: "long",
+                                                year: "numeric",
+                                            })
+                                            : "Выберите дату"}
+                                    </span>
+                                </div>
+                                <div className="p-4 rounded-lg border">
+                                    <Calendar
+                                        mode="single"
+                                        locale={ru}
+                                        defaultMonth={getNextMonthDateRange().from}
+                                        selected={selectedDate}
+                                        onSelect={setSelectedDate}
+                                        disabled={(date) => {
+                                            const { from, to } = getNextMonthDateRange()
+                                            return date < from || date > to
+                                        }}
+                                        className="rounded-md bg-gray-dark border-gray-accent"
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <DialogFooter>
-                        <DialogClose asChild>
-                            <Button variant="outline">Cancel</Button>
-                        </DialogClose>
-                        <Button type="submit">Save changes</Button>
+                        <Button
+                            className="w-full h-14 text-lg font-semibold flex items-center justify-center gap-3 bg-gold hover:bg-gold-dark cursor-pointer"
+                        >
+                            Оформить рассрочку
+                        </Button>
                     </DialogFooter>
                 </DialogContent>
             </form>
