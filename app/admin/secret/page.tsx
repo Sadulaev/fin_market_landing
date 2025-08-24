@@ -1,19 +1,19 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input'
-import React, { useMemo, useRef } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 
 const Page = () => {
     const [percents, setpercents] = React.useState([0]);
+    const [link, setLink] = useState<string>('');
 
     const linkInput = useRef<HTMLInputElement>(null);
     const btnRef = useRef<HTMLButtonElement>(null);
 
-    const linkUrl = useMemo(() => {
-        if (typeof window !== undefined) {
-            return `${window.location.origin}?k=${percents}`
-        }
+    useEffect(() => {
+        setLink(`${window.location.origin}?k=${percents}`);
     }, [percents])
+
     return (
         <div className='flex flex-col gap-4 p-4'>
             <div className="flex items-center space-x-4">
@@ -38,7 +38,7 @@ const Page = () => {
                 </span>
             </div>
             <hr />
-            <Input value={linkUrl} ref={linkInput} />
+            <Input value={link} ref={linkInput} />
             <Button ref={btnRef} className='h-12 text-2xl cursor-pointer' onClick={() => {
                 if (linkInput.current && btnRef.current) {
                     navigator.clipboard.writeText(linkInput.current.value)
