@@ -8,11 +8,17 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Phone, MapPin, Instagram, MessageCircle } from "lucide-react"
 import { YMaps, Map } from '@pbe/react-yandex-maps';
+import { useSearchParams } from "next/navigation"
+import SubmitModal from "@/components/submit-modal"
 
 export default function InstallmentCalculator() {
+  const searchParams = useSearchParams();
+  const k = searchParams.get('k')
+
   const [cost, setCost] = useState<number>(0);
   const [firstPayment, setFirstPayment] = useState<number>(0);
   const [period, setPeriod] = useState<number>(0);
+  const [openModal, setOpenModal] = useState<boolean>(false);
 
   const onChangeCost = (newCost: number, currentFirstPayment: number) => {
     if (newCost <= 1000000 && !isNaN(newCost)) {
@@ -43,32 +49,15 @@ export default function InstallmentCalculator() {
         monthlyAdditionalPayment: 0,
       }
     }
+
     const countedSum = firstPayment >= (cost / 2) ? cost / 2 : cost;
     const additionalPercent = firstPayment > 0 ? 0 : 5;
-    if (period <= 3) {
-      return {
-        montlyPayment: (cost + ((countedSum / 100 * (15 + additionalPercent)) * period)) / period,
-        summaryPayment: cost + ((countedSum / 100 * (15 + additionalPercent)) * period),
-        monthlyAdditionalPayment: (countedSum / 100 * (15 + additionalPercent)),
-      }
-    } else if (period <= 6) {
-      return {
-        montlyPayment: (cost + ((countedSum / 100 * (25 + additionalPercent)) * period)) / period,
-        summaryPayment: cost + ((countedSum / 100 * (25 + additionalPercent)) * period),
-        monthlyAdditionalPayment: (countedSum / 100 * (25 + additionalPercent)),
-      }
-    } else if (period <= 8) {
-      return {
-        montlyPayment: (cost + ((countedSum / 100 * (35 + additionalPercent)) * period)) / period,
-        summaryPayment: cost + ((countedSum / 100 * (35 + additionalPercent)) * period),
-        monthlyAdditionalPayment: (countedSum / 100 * (35 + additionalPercent)),
-      }
-    } else if (period === 12) {
-      return {
-        montlyPayment: (cost + ((countedSum / 100 * (45 + additionalPercent)) * period)) / period,
-        summaryPayment: cost + ((countedSum / 100 * (45 + additionalPercent)) * period),
-        monthlyAdditionalPayment: (countedSum / 100 * (45 + additionalPercent)),
-      }
+    const percent = Number(k) || 5;
+
+    return {
+      montlyPayment: (cost + ((countedSum / 100 * percent) * period)) / period,
+      summaryPayment: cost + ((countedSum / 100 * percent) * period),
+      monthlyAdditionalPayment: (countedSum / 100 * percent),
     }
   }, [cost, firstPayment, period])
 
@@ -78,6 +67,7 @@ export default function InstallmentCalculator() {
 
   return (
     <div className="min-h-screen">
+      <SubmitModal open={openModal} onOpenChange={setOpenModal} />
       {/* Navigation */}
       <nav
         className="shadow-sm sticky top-0 z-50 border-gray-accent bg-gray-dark"
@@ -270,7 +260,7 @@ export default function InstallmentCalculator() {
 
               <Button
                 className="w-full h-14 text-lg font-semibold flex items-center justify-center gap-3 bg-gold hover:bg-gold-dark cursor-pointer"
-                onClick={() => window.open("https://wa.me/79001234567?text=Хочу оформить рассрочку", "_blank")}
+                onClick={() => setOpenModal(true)}
               >
                 Оформить рассрочку
               </Button>
