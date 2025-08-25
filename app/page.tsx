@@ -13,7 +13,7 @@ import SubmitModal from "@/components/submit-modal"
 import WarningWindow from "@/components/warning-window"
 
 export default function InstallmentCalculator() {
-  const router = useRouter();  
+  const router = useRouter();
   const searchParams = useSearchParams();
 
   const calcRef = useRef<HTMLDivElement>(null);
@@ -41,9 +41,12 @@ export default function InstallmentCalculator() {
     }
   }
 
-  const onChangePeriod = (newPeriod: number) => {
+  const onChangePeriod = (newPeriod: number, currentFirstPayment: number) => {
     if (newPeriod <= 12 && !isNaN(newPeriod)) {
-      setPeriod(newPeriod)
+      setPeriod(newPeriod);
+    }
+    if (currentFirstPayment < (cost * 0.25)) {
+      setFirstPayment(cost * 0.25)
     }
   }
 
@@ -57,11 +60,11 @@ export default function InstallmentCalculator() {
     }
 
     const countedSum = firstPayment >= (cost / 2) ? cost / 2 : cost;
-    const additionalPercent = firstPayment > 0 ? 0 : 5;
-    const percent = Number(k) || 5;
+    const additionalPercent = firstPayment >= (cost * 0.25) ? 0 : 1;
+    const percent = (Number(k) || 5) + additionalPercent;
 
     return {
-      montlyPayment: (cost + ((countedSum / 100 * percent) * period)) / period,
+      montlyPayment: ((cost + ((countedSum / 100 * percent) * period)) - firstPayment) / period,
       summaryPayment: cost + ((countedSum / 100 * percent) * period),
       monthlyAdditionalPayment: (countedSum / 100 * percent),
     }
@@ -195,7 +198,7 @@ export default function InstallmentCalculator() {
                     inputMode="numeric"
                     type="text"
                     value={period}
-                    onChange={(e) => onChangePeriod(Number(e.target.value))}
+                    onChange={(e) => onChangePeriod(Number(e.target.value), firstPayment)}
                     className="w-48 text-xl h-12 text-white font-semibold border-gray-accent bg-gray-medium"
                   />
                   <span className="text-xl text-gray-accent">
@@ -204,7 +207,12 @@ export default function InstallmentCalculator() {
                 </div>
                 <Slider
                   value={[period]}
-                  onValueChange={(v) => setPeriod(v[0])}
+                  onValueChange={(v) => {
+                    setPeriod(v[0])
+                    if (firstPayment < (cost * 0.25)) {
+                      setFirstPayment(cost * 0.25)
+                    }
+                  }}
                   max={12}
                   min={1}
                   step={1}
