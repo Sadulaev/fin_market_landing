@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useState } from "react"
+import { useCallback, useMemo, useState } from "react"
 import { Calendar } from "./ui/calendar"
 import { CalendarIcon, X } from "lucide-react"
 import { ru } from 'react-day-picker/locale'
@@ -29,12 +29,9 @@ type Props = {
 }
 
 function SubmitModal({ open, onOpenChange, data }: Props) {
-    const [formData, setFormData] = useState({
-        lastName: "",
-        firstName: "",
-        phone: "",
-        date: undefined as Date | undefined,
-    })
+    const [firstName, setFirstName] = useState("")
+    const [lastName, setLastName] = useState("")
+    const [phone, setPhone] = useState("")
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
 
     const [showCalendar, setShowCalendar] = useState(false);
@@ -63,7 +60,7 @@ function SubmitModal({ open, onOpenChange, data }: Props) {
         return `+7 (${cleaned.slice(1, 4)}) ${cleaned.slice(4, 7)}-${cleaned.slice(7, 9)}-${cleaned.slice(9, 11)}`
     }
 
-    function whatsAppButton() {
+    const whatsAppButton = useCallback(() => {
         const phone = "79284773444"
         const message = `Стоимость товара: ${data.cost} ₽
 Первый взнос: ${data.firstPayment} ₽
@@ -71,16 +68,16 @@ function SubmitModal({ open, onOpenChange, data }: Props) {
 Ежемесячный платеж: ${data.monthlyPayment} ₽
 Итоговая сумма выплат: ${data.resultSum} ₽
 
-Имя: ${formData.firstName}
-Фамилия: ${formData.lastName}
-Телефон: ${formData.phone}
+Имя: ${firstName}
+Фамилия: ${lastName}
+Телефон: ${phone}
 Дата первого платежа: ${selectedDate ? selectedDate.toLocaleDateString("ru-RU") : "не выбрана"}`
 
         // Кодируем сообщение для URL
         const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
 
         window.open(url, "_blank")
-    }
+    }, [data.cost, data.firstPayment, data.period, data.monthlyPayment, data.resultSum, firstName, lastName, phone, selectedDate])
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -96,21 +93,21 @@ function SubmitModal({ open, onOpenChange, data }: Props) {
                     <div className="grid gap-4">
                         <div className="grid gap-3">
                             <Label htmlFor="name-1">Имя</Label>
-                            <Input id="name-1" name="name" className="bg-gray-medium border-gray-accent" />
+                            <Input id="name-1" name="name" className="bg-gray-medium border-gray-accent" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
                         </div>
                         <div className="grid gap-3">
                             <Label htmlFor="username-1">Фамилия</Label>
-                            <Input id="username-1" name="username" className="bg-gray-medium border-gray-accent" />
+                            <Input id="username-1" name="username" className="bg-gray-medium border-gray-accent" value={lastName} onChange={(e) => setLastName(e.target.value)} />
                         </div>
                         {/* Номер телефона */}
                         <div className="grid gap-3">
                             <Label htmlFor="phone">Номер телефона</Label>
                             <Input
                                 id="phone"
-                                value={formData.phone}
+                                value={phone}
                                 onChange={(e) => {
                                     const formatted = formatPhoneNumber(e.target.value)
-                                    setFormData({ ...formData, phone: formatted })
+                                    setPhone(formatted)
                                 }}
                                 placeholder="+7 (___) ___-__-__"
                                 className="bg-gray-medium border-gray-accent placeholder:text-gray-400"
