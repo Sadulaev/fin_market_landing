@@ -13,15 +13,22 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
 import { Calendar } from "./ui/calendar"
-import { CalendarIcon } from "lucide-react"
+import { CalendarIcon, X } from "lucide-react"
 import { ru } from 'react-day-picker/locale'
 
 type Props = {
     open: boolean;
     onOpenChange: (open: boolean) => void;
+    data: {
+        cost: number;
+        firstPayment: number;
+        period: number;
+        resultSum: number;
+        monthlyPayment: number;
+    };
 }
 
-function SubmitModal({ open, onOpenChange }: Props) {
+function SubmitModal({ open, onOpenChange, data }: Props) {
     const [formData, setFormData] = useState({
         lastName: "",
         firstName: "",
@@ -30,11 +37,20 @@ function SubmitModal({ open, onOpenChange }: Props) {
     })
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
 
+    const [showCalendar, setShowCalendar] = useState(false);
+
     const getNextMonthDateRange = () => {
         const today = new Date()
-        const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1)
-        const lastDayOfNextMonth = new Date(today.getFullYear(), today.getMonth() + 2, 0)
-        return { from: nextMonth, to: lastDayOfNextMonth }
+
+        // Первый день следующего месяца
+        const targetPrevDays = today.getDate() - 15
+        const from = new Date(today.getFullYear(), today.getMonth() + 1, targetPrevDays)
+
+        // День окончания = текущий день + 5 (в следующем месяце)
+        const targetDay = today.getDate() + 5
+        const to = new Date(today.getFullYear(), today.getMonth() + 1, targetDay)
+
+        return { from, to }
     }
 
     const formatPhoneNumber = (value: string) => {
@@ -45,6 +61,25 @@ function SubmitModal({ open, onOpenChange }: Props) {
         if (cleaned.length <= 7) return `+7 (${cleaned.slice(1, 4)}) ${cleaned.slice(4)}`
         if (cleaned.length <= 9) return `+7 (${cleaned.slice(1, 4)}) ${cleaned.slice(4, 7)}-${cleaned.slice(7)}`
         return `+7 (${cleaned.slice(1, 4)}) ${cleaned.slice(4, 7)}-${cleaned.slice(7, 9)}-${cleaned.slice(9, 11)}`
+    }
+
+    function whatsAppButton() {
+        const phone = "79284773444"
+        const message = `Стоимость товара: ${data.cost} ₽
+Первый взнос: ${data.firstPayment} ₽
+Срок рассрочки: ${data.period} месяцев
+Ежемесячный платеж: ${data.monthlyPayment} ₽
+Итоговая сумма выплат: ${data.resultSum} ₽
+
+Имя: ${formData.firstName}
+Фамилия: ${formData.lastName}
+Телефон: ${formData.phone}
+Дата первого платежа: ${selectedDate ? selectedDate.toLocaleDateString("ru-RU") : "не выбрана"}`
+
+        // Кодируем сообщение для URL
+        const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
+
+        window.open(url, "_blank")
     }
 
     return (
@@ -81,43 +116,55 @@ function SubmitModal({ open, onOpenChange }: Props) {
                                 className="bg-gray-medium border-gray-accent placeholder:text-gray-400"
                             />
                         </div>
-                        <div className="space-y-4">
-                            <Label className="" style={{ color: "#f8f9fa" }}>
-                                Дата первого платежа
-                            </Label>
-                            <div className="flex flex-col items-center space-y-4">
-                                <div className="flex items-center space-x-4">
-                                    <CalendarIcon className="h-6 w-6" style={{ color: "#10B981" }} />
-                                    <span className="text-lg" style={{ color: "#808080" }}>
-                                        {selectedDate
-                                            ? selectedDate.toLocaleDateString("ru-RU", {
-                                                day: "numeric",
-                                                month: "long",
-                                                year: "numeric",
-                                            })
-                                            : "Выберите дату"}
-                                    </span>
-                                </div>
-                                <div className="p-4 rounded-lg border">
-                                    <Calendar
-                                        mode="single"
-                                        locale={ru}
-                                        defaultMonth={getNextMonthDateRange().from}
-                                        selected={selectedDate}
-                                        onSelect={setSelectedDate}
-                                        disabled={(date) => {
-                                            const { from, to } = getNextMonthDateRange()
-                                            return date < from || date > to
-                                        }}
-                                        className="rounded-md bg-gray-dark border-gray-accent"
-                                    />
+                        {showCalendar ? (
+                            <div className="space-y-4 relative">
+                                <X onClick={() => setShowCalendar(false)} className="h-6 w-6 cursor-pointer absolute top-2 right-2" style={{ color: "#f8f9fa" }} />
+                                <Label className="" style={{ color: "#f8f9fa" }}>
+                                    Дата первого платежа
+                                </Label>
+                                <div className="flex flex-col items-center space-y-4 pt-3">
+                                    {/* <div className="flex items-center space-x-4">
+                                        <CalendarIcon className="h-6 w-6" style={{ color: "#10B981" }} />
+                                        <span className="text-lg" style={{ color: "#808080" }}>
+                                            {selectedDate
+                                                ? selectedDate.toLocaleDateString("ru-RU", {
+                                                    day: "numeric",
+                                                    month: "long",
+                                                    year: "numeric",
+                                                })
+                                                : "Выберите дату"}
+                                        </span>
+                                    </div> */}
+                                    <div className="p-4 rounded-lg border">
+                                        <Calendar
+                                            mode="single"
+                                            locale={ru}
+                                            defaultMonth={getNextMonthDateRange().from}
+                                            selected={selectedDate}
+                                            onSelect={setSelectedDate}
+                                            disabled={(date) => {
+                                                const { from, to } = getNextMonthDateRange()
+                                                return date < from || date > to
+                                            }}
+                                            className="rounded-md bg-gray-dark border-gray-accent"
+                                        />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        ) : (
+                            <Button
+                                variant="outline"
+                                className="w-full h-14 text-lg font-semibold flex items-center justify-center gap-3 bg-gray-accent border-gray-accent hover:bg-gray-dark hover:text-white cursor-pointer"
+                                onClick={() => setShowCalendar(true)}
+                            >
+                                Выбрать дату первого платежа
+                            </Button>
+                        )}
                     </div>
                     <DialogFooter>
                         <Button
                             className="w-full h-14 text-lg font-semibold flex items-center justify-center gap-3 bg-gold hover:bg-gold-dark cursor-pointer"
+                            onClick={whatsAppButton}
                         >
                             Оформить рассрочку
                         </Button>
@@ -128,4 +175,4 @@ function SubmitModal({ open, onOpenChange }: Props) {
     )
 }
 
-export default SubmitModal;
+export default SubmitModal

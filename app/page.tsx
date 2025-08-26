@@ -74,9 +74,36 @@ export default function InstallmentCalculator() {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" })
   }
 
+  const sliderToValue = (pos: number) => {
+    if (pos <= 50) {
+      // Левая половина: 10 000 → 150 000
+      const raw = 10000 + (pos / 50) * 140000
+      return Math.round(raw / 500) * 500
+    } else {
+      // Правая половина: 150 000 → 300 000
+      const raw = 150000 + ((pos - 50) / 50) * 150000
+      return Math.round(raw / 5000) * 5000
+    }
+  }
+
+  // реальное значение → pos [0..100]
+  const valueToSlider = (val: number) => {
+    if (val <= 150000) {
+      return ((val - 10000) / 140000) * 50
+    } else {
+      return 50 + ((val - 150000) / 150000) * 50
+    }
+  }
+
   return (
     <div className="min-h-screen">
-      <SubmitModal open={openModal} onOpenChange={setOpenModal} />
+      <SubmitModal open={openModal} onOpenChange={setOpenModal} data={{
+        cost,
+        firstPayment,
+        period,
+        resultSum: result.summaryPayment,
+        monthlyPayment: result.montlyPayment,
+      }} />
       {/* Navigation */}
       <nav
         className="shadow-sm sticky top-0 z-50 border-gray-accent bg-gray-dark"
@@ -138,16 +165,18 @@ export default function InstallmentCalculator() {
                   </span>
                 </div>
                 <Slider
-                  value={[cost]}
-                  onValueChange={(v) => onChangeCost(v[0], firstPayment)}
-                  max={1000000}
-                  min={10000}
-                  step={5000}
+                  value={[valueToSlider(cost)]}
+                  onValueChange={(v) => {
+                    setCost(sliderToValue(v[0]))
+                  }}
+                  max={100}
+                  step={0.1}
                   className="w-full"
                 />
                 <div className="flex justify-between text-md text-gray-accent">
                   <span>10 000 ₽</span>
-                  <span>1 000 000 ₽</span>
+                  <span>150 000 ₽</span>
+                  <span>300 000 ₽</span>
                 </div>
               </div>
 
@@ -179,7 +208,7 @@ export default function InstallmentCalculator() {
                   onValueChange={(v) => setFirstPayment(v[0])}
                   max={Number((cost * 0.8).toFixed(1))}
                   min={0}
-                  step={1000}
+                  step={cost * 0.05}
                   className="w-full"
                 />
                 <div className="flex justify-between text-md text-gray-accent">
