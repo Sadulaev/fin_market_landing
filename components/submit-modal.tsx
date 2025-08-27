@@ -43,8 +43,8 @@ function SubmitModal({ open, onOpenChange, data }: Props) {
         const targetPrevDays = today.getDate() - 15
         const from = new Date(today.getFullYear(), today.getMonth() + 1, targetPrevDays)
 
-        // День окончания = текущий день + 5 (в следующем месяце)
-        const targetDay = today.getDate() + 5
+        // День окончания = текущий день + 7 (в следующем месяце)
+        const targetDay = today.getDate() + 7
         const to = new Date(today.getFullYear(), today.getMonth() + 1, targetDay)
 
         return { from, to }
@@ -151,7 +151,7 @@ function SubmitModal({ open, onOpenChange, data }: Props) {
                         ) : (
                             <Button
                                 variant="outline"
-                                className="w-full h-14 text-lg font-semibold flex items-center justify-center gap-3 bg-gray-accent border-gray-accent hover:bg-gray-dark hover:text-white cursor-pointer"
+                                className="w-full h-14 text-lg font-semibold bg-gray-accent border-gray-accent hover:bg-gray-dark hover:text-white cursor-pointer"
                                 onClick={() => setShowCalendar(true)}
                             >
                                 Выбрать дату первого платежа
