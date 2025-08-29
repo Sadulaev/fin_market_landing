@@ -15,6 +15,7 @@ import { useCallback, useMemo, useState } from "react"
 import { Calendar } from "./ui/calendar"
 import { CalendarIcon, X } from "lucide-react"
 import { ru } from 'react-day-picker/locale'
+import { ScrollArea } from "./ui/scroll-area"
 
 type Props = {
     open: boolean;
@@ -82,45 +83,46 @@ function SubmitModal({ open, onOpenChange, data }: Props) {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <form>
-                <DialogContent className="sm:max-w-[425px] bg-gray-dark border-gray-accent text-white">
-                    <DialogHeader>
-                        <DialogTitle>Заполните информацию</DialogTitle>
-                        {/* <DialogDescription>
+                <DialogContent className="sm:max-w-[425px] max-h-[90vh] overflow-y-auto bg-gray-dark border-gray-accent text-white">
+                    <ScrollArea className="h-[90vh]">
+                        <DialogHeader>
+                            <DialogTitle>Заполните информацию</DialogTitle>
+                            {/* <DialogDescription>
               Make changes to your profile here. Click save when you&apos;re
               done.
             </DialogDescription> */}
-                    </DialogHeader>
-                    <div className="grid gap-4">
-                        <div className="grid gap-3">
-                            <Label htmlFor="name-1">Имя</Label>
-                            <Input id="name-1" name="name" className="bg-gray-medium border-gray-accent" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
-                        </div>
-                        <div className="grid gap-3">
-                            <Label htmlFor="username-1">Фамилия</Label>
-                            <Input id="username-1" name="username" className="bg-gray-medium border-gray-accent" value={lastName} onChange={(e) => setLastName(e.target.value)} />
-                        </div>
-                        {/* Номер телефона */}
-                        <div className="grid gap-3">
-                            <Label htmlFor="phone">Номер телефона</Label>
-                            <Input
-                                id="phone"
-                                value={phone}
-                                onChange={(e) => {
-                                    const formatted = formatPhoneNumber(e.target.value)
-                                    setPhone(formatted)
-                                }}
-                                placeholder="+7 (___) ___-__-__"
-                                className="bg-gray-medium border-gray-accent placeholder:text-gray-400"
-                            />
-                        </div>
-                        {showCalendar ? (
-                            <div className="space-y-4 relative">
-                                <X onClick={() => setShowCalendar(false)} className="h-6 w-6 cursor-pointer absolute top-2 right-2" style={{ color: "#f8f9fa" }} />
-                                <Label className="" style={{ color: "#f8f9fa" }}>
-                                    Дата первого платежа
-                                </Label>
-                                <div className="flex flex-col items-center space-y-4 pt-3">
-                                    {/* <div className="flex items-center space-x-4">
+                        </DialogHeader>
+                        <div className="grid gap-4">
+                            <div className="grid gap-3">
+                                <Label htmlFor="name-1">Имя</Label>
+                                <Input id="name-1" name="name" className="bg-gray-medium border-gray-accent" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+                            </div>
+                            <div className="grid gap-3">
+                                <Label htmlFor="username-1">Фамилия</Label>
+                                <Input id="username-1" name="username" className="bg-gray-medium border-gray-accent" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                            </div>
+                            {/* Номер телефона */}
+                            <div className="grid gap-3">
+                                <Label htmlFor="phone">Номер телефона</Label>
+                                <Input
+                                    id="phone"
+                                    value={phone}
+                                    onChange={(e) => {
+                                        const formatted = formatPhoneNumber(e.target.value)
+                                        setPhone(formatted)
+                                    }}
+                                    placeholder="+7 (___) ___-__-__"
+                                    className="bg-gray-medium border-gray-accent placeholder:text-gray-400"
+                                />
+                            </div>
+                            {showCalendar ? (
+                                <div className="space-y-4 relative">
+                                    <X onClick={() => setShowCalendar(false)} className="h-6 w-6 cursor-pointer absolute top-2 right-2" style={{ color: "#f8f9fa" }} />
+                                    <Label className="" style={{ color: "#f8f9fa" }}>
+                                        Дата первого платежа
+                                    </Label>
+                                    <div className="flex flex-col items-center space-y-4 pt-3">
+                                        {/* <div className="flex items-center space-x-4">
                                         <CalendarIcon className="h-6 w-6" style={{ color: "#10B981" }} />
                                         <span className="text-lg" style={{ color: "#808080" }}>
                                             {selectedDate
@@ -132,40 +134,41 @@ function SubmitModal({ open, onOpenChange, data }: Props) {
                                                 : "Выберите дату"}
                                         </span>
                                     </div> */}
-                                    <div className="p-4 rounded-lg border">
-                                        <Calendar
-                                            mode="single"
-                                            locale={ru}
-                                            defaultMonth={getNextMonthDateRange().from}
-                                            selected={selectedDate}
-                                            onSelect={setSelectedDate}
-                                            disabled={(date) => {
-                                                const { from, to } = getNextMonthDateRange()
-                                                return date < from || date > to
-                                            }}
-                                            className="rounded-md bg-gray-dark border-gray-accent"
-                                        />
+                                        <div className="p-4 rounded-lg border">
+                                            <Calendar
+                                                mode="single"
+                                                locale={ru}
+                                                defaultMonth={getNextMonthDateRange().from}
+                                                selected={selectedDate}
+                                                onSelect={setSelectedDate}
+                                                disabled={(date) => {
+                                                    const { from, to } = getNextMonthDateRange()
+                                                    return date < from || date > to
+                                                }}
+                                                className="rounded-md bg-gray-dark border-gray-accent"
+                                            />
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ) : (
+                            ) : (
+                                <Button
+                                    variant="outline"
+                                    className="w-full h-14 text-lg font-semibold bg-gray-accent border-gray-accent hover:bg-gray-dark hover:text-white cursor-pointer"
+                                    onClick={() => setShowCalendar(true)}
+                                >
+                                    Выбрать дату первого платежа
+                                </Button>
+                            )}
+                        </div>
+                        <DialogFooter>
                             <Button
-                                variant="outline"
-                                className="w-full h-14 text-lg font-semibold bg-gray-accent border-gray-accent hover:bg-gray-dark hover:text-white cursor-pointer"
-                                onClick={() => setShowCalendar(true)}
+                                className="w-full h-14 text-lg font-semibold flex items-center justify-center gap-3 bg-gold hover:bg-gold-dark cursor-pointer"
+                                onClick={whatsAppButton}
                             >
-                                Выбрать дату первого платежа
+                                Оформить рассрочку
                             </Button>
-                        )}
-                    </div>
-                    <DialogFooter>
-                        <Button
-                            className="w-full h-14 text-lg font-semibold flex items-center justify-center gap-3 bg-gold hover:bg-gold-dark cursor-pointer"
-                            onClick={whatsAppButton}
-                        >
-                            Оформить рассрочку
-                        </Button>
-                    </DialogFooter>
+                        </DialogFooter>
+                    </ScrollArea>
                 </DialogContent>
             </form>
         </Dialog>

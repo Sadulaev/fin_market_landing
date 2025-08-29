@@ -36,7 +36,7 @@ export default function InstallmentCalculator() {
   }
 
   const onChangeFirstPayment = (newPayment: number, currentCost: number) => {
-    if (newPayment <= currentCost * 0.8 && !isNaN(newPayment)) {
+    if (newPayment <= currentCost * 0.8 && currentCost > 0 && !isNaN(newPayment)) {
       setFirstPayment(newPayment);
     }
   }
@@ -175,13 +175,13 @@ export default function InstallmentCalculator() {
                     className="w-full"
                   />
                   <div
-                    className="absolute top-1/2 h-3 w-3 -translate-y-1/2 -translate-x-1/2 rounded-full border bg-white shadow z-20"
+                    className={`absolute top-1/2 h-6 w-1 -translate-y-1/2 -translate-x-1/2 rounded-full ${cost >= 150000 ? 'bg-gold-dark' : 'bg-white'} shadow`}
                     style={{ left: "50%" }}
                   />
                 </div>
                 <div className="flex justify-between text-md text-gray-accent">
                   <span>10 000 ₽</span>
-                  <span>150 000 ₽</span>
+                  <span className="relative translate-x-[12.5px]">150 000 ₽</span>
                   <span>300 000 ₽</span>
                 </div>
               </div>
@@ -195,7 +195,7 @@ export default function InstallmentCalculator() {
                   <Input
                     inputMode="numeric"
                     type="text"
-                    value={firstPayment}
+                    value={firstPayment || 0}
                     onChange={(e) => onChangeFirstPayment(Number(e.target.value), cost)}
                     className="w-48 text-xl h-12 text-white font-semibold border-gray-accent bg-gray-medium"
                   />
@@ -204,14 +204,14 @@ export default function InstallmentCalculator() {
                   </span>
                   {cost > 0 && (
                     <span className="text-md text-gray-accent">
-                      ({((firstPayment / cost) * 100).toFixed(1)}%)
+                      ({(((firstPayment || 0) / cost) * 100).toFixed(1)}%)
                     </span>
                   )}
 
                 </div>
                 <Slider
                   value={[firstPayment]}
-                  onValueChange={(v) => setFirstPayment(v[0])}
+                  onValueChange={(v) => onChangeFirstPayment(v[0], cost)}
                   max={Number((cost * 0.8).toFixed(1))}
                   min={0}
                   step={cost * 0.05}
