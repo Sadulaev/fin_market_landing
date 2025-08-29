@@ -1,17 +1,18 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input'
+import { encryptNumber } from '@/lib/utils';
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 
 const Page = () => {
-    const [percents, setpercents] = React.useState([0]);
+    const [percents, setPercents] = React.useState('5');
     const [link, setLink] = useState<string>('');
 
     const linkInput = useRef<HTMLInputElement>(null);
     const btnRef = useRef<HTMLButtonElement>(null);
 
     useEffect(() => {
-        setLink(`${window.location.origin}?k=${percents}`);
+        setLink(`${window.location.origin}?k=${encryptNumber(Number(percents) || 5)}`);
     }, [percents])
 
     return (
@@ -20,9 +21,9 @@ const Page = () => {
                 <Input
                     inputMode="numeric"
                     type="text"
-                    value={percents[0]}
+                    value={percents}
                     onChange={(e) => {
-                        setpercents([Number(e.target.value)])
+                        setPercents(e.target.value)
                         if (btnRef.current) {
                             btnRef.current.innerHTML = 'Скопировать ссылку'
                         }

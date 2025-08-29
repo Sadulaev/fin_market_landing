@@ -11,9 +11,9 @@ import { YMaps, Map, Placemark } from '@pbe/react-yandex-maps';
 import { useRouter, useSearchParams } from "next/navigation"
 import SubmitModal from "@/components/submit-modal"
 import WarningWindow from "@/components/warning-window"
+import { decryptNumber } from "@/lib/utils"
 
 export default function InstallmentCalculator() {
-  const router = useRouter();
   const searchParams = useSearchParams();
 
   const calcRef = useRef<HTMLDivElement>(null);
@@ -61,7 +61,7 @@ export default function InstallmentCalculator() {
 
     const countedSum = firstPayment >= (cost / 2) ? cost / 2 : cost;
     const additionalPercent = firstPayment >= (cost * 0.25) ? 0 : 1;
-    const percent = (Number(k) || 5) + additionalPercent;
+    const percent = decryptNumber(k || '') + additionalPercent;
 
     return {
       monthlyPayment: ((cost + ((countedSum / 100 * percent) * period)) - firstPayment) / period,
