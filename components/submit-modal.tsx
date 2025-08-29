@@ -154,6 +154,9 @@ function SubmitModal({ open, onOpenChange, data }: Props) {
                                                 return date < from || date > to
                                             }}
                                             className="rounded-md bg-gray-dark border-gray-accent"
+                                            classNames={{
+                                                day: "text-white",
+                                            }}
                                         />
                                     </div>
                                 </div>

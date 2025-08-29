@@ -5,9 +5,8 @@ import './globals.css'
 import { Suspense } from 'react'
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.app',
+  title: 'Finmarket',
+  description: 'Калькулятор рассрочки',
 }
 
 export default function RootLayout({
@@ -17,15 +16,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <style>{`
-html {
-  font-family: ${GeistSans.style.fontFamily};
-  --font-sans: ${GeistSans.variable};
-  --font-mono: ${GeistMono.variable};
-}
-        `}</style>
-      </head>
       <body>
         <Suspense>
           {children}

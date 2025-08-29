@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Phone, MapPin, Instagram, MessageCircle, AlertTriangle } from "lucide-react"
 import { YMaps, Map, Placemark } from '@pbe/react-yandex-maps';
-import { useRouter, useSearchParams } from "next/navigation"
+import { useSearchParams } from "next/navigation"
 import SubmitModal from "@/components/submit-modal"
 import WarningWindow from "@/components/warning-window"
 import { decryptNumber } from "@/lib/utils"
