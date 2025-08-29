@@ -75,15 +75,15 @@ function SubmitModal({ open, onOpenChange, data }: Props) {
 Первый взнос: ${data.firstPayment} ₽
 Срок рассрочки: ${data.period} месяцев
 Ежемесячный платеж: ${data.monthlyPayment} ₽
-Итоговая сумма выплат: ${data.resultSum} ₽
+Итоговая сумма: ${data.resultSum} ₽
 
 Имя: ${firstName}
 Фамилия: ${lastName}
-Телефон: ${phoneNum}
+Телефон: ${phone}
 Дата первого платежа: ${selectedDate.toLocaleDateString("ru-RU")}`
 
         // Кодируем сообщение для URL
-        const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
+        const url = `https://wa.me/${phoneNum}?text=${encodeURIComponent(message)}`
 
         window.open(url, "_blank")
     }, [data.cost, data.firstPayment, data.period, data.monthlyPayment, data.resultSum, firstName, lastName, phone, selectedDate])
