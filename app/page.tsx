@@ -53,7 +53,7 @@ export default function InstallmentCalculator() {
   const result = useMemo(() => {
     if (period <= 0 || cost <= 0) {
       return {
-        montlyPayment: 0,
+        monthlyPayment: 0,
         summaryPayment: 0,
         monthlyAdditionalPayment: 0,
       }
@@ -64,7 +64,7 @@ export default function InstallmentCalculator() {
     const percent = (Number(k) || 5) + additionalPercent;
 
     return {
-      montlyPayment: ((cost + ((countedSum / 100 * percent) * period)) - firstPayment) / period,
+      monthlyPayment: ((cost + ((countedSum / 100 * percent) * period)) - firstPayment) / period,
       summaryPayment: cost + ((countedSum / 100 * percent) * period),
       monthlyAdditionalPayment: (countedSum / 100 * percent),
     }
@@ -102,7 +102,7 @@ export default function InstallmentCalculator() {
         firstPayment,
         period,
         resultSum: result.summaryPayment,
-        monthlyPayment: result.montlyPayment,
+        monthlyPayment: result.monthlyPayment,
       }} />
       {/* Navigation */}
       <nav
@@ -288,7 +288,7 @@ export default function InstallmentCalculator() {
                         Ежемесячный платеж:
                       </p>
                       <p className="text-4xl font-bold text-gold-dark">
-                        {result?.montlyPayment.toLocaleString("ru-RU", {
+                        {result?.monthlyPayment.toLocaleString("ru-RU", {
                           minimumFractionDigits: 0,
                           maximumFractionDigits: 0,
                         })}{" "}
