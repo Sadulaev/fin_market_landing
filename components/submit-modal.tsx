@@ -55,8 +55,6 @@ function SubmitModal({ open, onOpenChange, data }: Props) {
 
     const formatPhoneNumber = (value: string) => {
         const cleaned = value.replace(/\D/g, "")
-        console.log(value, 'value')
-        console.log(cleaned, 'cleaned')
         if (cleaned.length === 0) return ""
         if (cleaned.length <= 1 && value === "+7 (") return ""
         if (cleaned.length <= 1) return `+7 (${cleaned}`
