@@ -5,7 +5,7 @@ import './globals.css'
 import { Suspense } from 'react'
 
 export const metadata: Metadata = {
-  title: 'Finmarket',
+  title: 'Murabaha',
   description: 'Калькулятор рассрочки',
 }
 

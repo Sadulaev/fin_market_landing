@@ -71,7 +71,7 @@ function SubmitModal({ open, onOpenChange, data }: Props) {
             return;
         }
 
-        const phoneNum = "79284771197"
+        const phoneNum = "79288958095"
         const message = `Стоимость товара: ${data.cost} ₽
 Первый взнос: ${data.firstPayment} ₽
 Срок рассрочки: ${data.period} месяцев

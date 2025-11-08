@@ -498,7 +498,7 @@ export default function InstallmentCalculator() {
                           WhatsApp
                         </p>
                         <a
-                          href="https://wa.me/79284771197"
+                          href="https://wa.me/79288958095"
                           target="_blank"
                           rel="noopener noreferrer"
                           className="hover:underline text-gold"
