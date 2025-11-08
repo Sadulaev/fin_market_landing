@@ -453,7 +453,7 @@ export default function InstallmentCalculator() {
                           Телефон
                         </p>
                         <a href="tel:+79284773444" className="hover:underline text-gold">
-                          +7 (928) 477 34 44
+                          +7 (928) 895 80 95
                         </a>
                       </div>
                     </div>
@@ -466,11 +466,11 @@ export default function InstallmentCalculator() {
                         <p className="font-semibold">
                           Адрес
                         </p>
-                        <p className="text-gold">г. Грозный, ул. Шейха-Али Митаева, д. 65</p>
+                        <p className="text-gold">г. Грозный, ул. Ярославского, д. 12</p>
                       </div>
                     </div>
 
-                    <div className="flex items-center space-x-4">
+                    {/* <div className="flex items-center space-x-4">
                       <div className="p-3" >
                         <Instagram className="h-6 w-6" />
                       </div>
@@ -487,7 +487,7 @@ export default function InstallmentCalculator() {
                           @fin_market95
                         </a>
                       </div>
-                    </div>
+                    </div> */}
 
                     <div className="flex items-center space-x-4">
                       <div className="p-3" >
@@ -498,7 +498,7 @@ export default function InstallmentCalculator() {
                           WhatsApp
                         </p>
                         <a
-                          href="https://wa.me/79284773444"
+                          href="https://wa.me/79284771197"
                           target="_blank"
                           rel="noopener noreferrer"
                           className="hover:underline text-gold"
@@ -525,8 +525,8 @@ export default function InstallmentCalculator() {
             {/* Map */}
             <div className="space-y-4 rounded-2xl overflow-hidden">
               <YMaps>
-                <Map defaultState={{ center: [43.330853, 45.693490], zoom: 15 }} className="w-full h-full">
-                  <Placemark geometry={[43.330853, 45.693490]} />
+                <Map defaultState={{ center: [43.294329, 45.717112], zoom: 15 }} className="w-full h-full">
+                  <Placemark geometry={[43.294329, 45.717112]} />
                 </Map>
               </YMaps>
             </div>
