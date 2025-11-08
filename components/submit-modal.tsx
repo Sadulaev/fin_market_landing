@@ -92,7 +92,7 @@ function SubmitModal({ open, onOpenChange, data }: Props) {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <form>
-                <DialogContent className="sm:max-w-[425px] max-h-[90vh] overflow-auto bg-gray-dark border-gray-accent text-white">
+                <DialogContent className="sm:max-w-[425px] max-h-[90vh] overflow-auto bg-white-acrill border-gray-accent text-gray-medium">
                     <DialogHeader>
                         <DialogTitle>Заполните информацию</DialogTitle>
                         {/* <DialogDescription>
@@ -103,11 +103,11 @@ function SubmitModal({ open, onOpenChange, data }: Props) {
                     <div className="grid gap-4">
                         <div className="grid gap-3">
                             <Label htmlFor="name-1">Имя</Label>
-                            <Input id="name-1" name="name" className="bg-gray-medium border-gray-accent" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+                            <Input id="name-1" name="name" className="border-gray-accent bg-white text-gray-dark" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
                         </div>
                         <div className="grid gap-3">
                             <Label htmlFor="username-1">Фамилия</Label>
-                            <Input id="username-1" name="username" className="bg-gray-medium border-gray-accent" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                            <Input id="username-1" name="username" className="border-gray-accent bg-white text-gray-dark" value={lastName} onChange={(e) => setLastName(e.target.value)} />
                         </div>
                         {/* Номер телефона */}
                         <div className="grid gap-3">
@@ -120,7 +120,7 @@ function SubmitModal({ open, onOpenChange, data }: Props) {
                                     setPhone(formatted)
                                 }}
                                 placeholder="+7 (___) ___-__-__"
-                                className="bg-gray-medium border-gray-accent placeholder:text-gray-400"
+                                className="border-gray-accent bg-white text-gray-dark"
                             />
                         </div>
                         {showCalendar ? (

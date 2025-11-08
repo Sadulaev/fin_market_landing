@@ -124,9 +124,9 @@
   --gray-accent: #B0B0B0;
   --white-ease: #F5F5F5;
   --white: #FFFFFF;
-  --gold: #D4AF37;
-  --gold-light: #F0E68C;
-  --gold-dark: #B8860B;
+  --white-acrill: #F0F5FC;
+  --gold: #CFA640;
+  --blue-light: #19B8E8;
 }
 
 .dark {
@@ -168,10 +168,10 @@
   --gray-medium: #4A4A4A;
   --gray-accent: #B0B0B0;
   --white-ease: #F5F5F5;
+  --white-acrill: #F0F5FC;
   --white: #FFFFFF;
-  --gold: #D4AF37;
-  --gold-light: #F0E68C;
-  --gold-dark: #D8CF7E;
+  --gold: #CFA640;
+  --blue-light: #19B8E8;
 }
 
 @theme inline {
@@ -217,10 +217,10 @@
   --color-gray-medium: var(--gray-medium);
   --color-gray-accent: var(--gray-accent);
   --color-white-ease: var(--white-ease);
+  --color-white-acrill: var(--white-acrill);
   --color-white: var(--white);
   --color-gold: var(--gold);
-  --color-gold-light: var(--gold-light);
-  --color-gold-dark: var(--gold-dark);
+  --color-blue-light: var(--blue-light);
 }
 
 @layer base {
