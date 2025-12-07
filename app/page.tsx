@@ -107,7 +107,7 @@ export default function InstallmentCalculator() {
       }} />
       {/* Navigation */}
       <nav
-        className="shadow-sm sticky top-0 z-50 border-gray-accent bg-white"
+        className="shadow-sm sticky top-0 z-50 border-gray-accent bg-[#fefbf6]"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 relative">
@@ -142,9 +142,9 @@ export default function InstallmentCalculator() {
       </nav>
 
       {/* Calculator Section */}
-      <section id="calculator" ref={calcRef} className="py-4 px-4 sm:px-6 lg:px-8 bg-blue-light">
+      <section id="calculator" ref={calcRef} className="py-4 px-4 sm:px-6 lg:px-8 bg-[#f2efea]">
         <div className="max-w-4xl mx-auto">
-          <Card className="shadow-xl bg-white-acrill">
+          <Card className="shadow-2xl bg-[#fefbf6]">
             <CardHeader>
               <CardTitle className="text-2xl text-center text-gray-medium">
                 Расчитай свою рассрочку
@@ -165,28 +165,28 @@ export default function InstallmentCalculator() {
                     className="w-48 text-xl h-12 text-gray-dark font-semibold border-gray-accent bg-white border-[2px]"
                   />
                   <span className="text-2xl text-gray-medium">
-                    ₽
+                    руб
                   </span>
                 </div>
                 <div className="relative">
                   <Slider
                     value={[valueToSlider(cost)]}
                     onValueChange={(v) => {
-                      setCost(sliderToValue(v[0]))
+                      onChangeCost(sliderToValue(v[0]), firstPayment)
                     }}
                     max={100}
                     step={0.1}
                     className="w-full"
                   />
                   <div
-                    className={`absolute top-1/2 h-6 w-1 -translate-y-1/2 -translate-x-1/2 rounded-full ${cost >= 150000 ? 'bg-gold' : 'bg-gray-accent'} shadow`}
+                    className={`absolute top-1/2 h-4 w-4 -translate-y-1/2 -translate-x-1/2 rounded-full ${cost >= 150000 ? 'bg-[#416e4f]' : 'bg-[#8fa881]'} shadow`}
                     style={{ left: "50%" }}
                   />
                 </div>
                 <div className="flex justify-between text-md text-gray-medium">
-                  <span>10 000 ₽</span>
-                  <span className="relative translate-x-[12.5px]">150 000 ₽</span>
-                  <span>300 000 ₽</span>
+                  <span>10 000 руб</span>
+                  <span className="relative translate-x-[12.5px]">150 000 руб</span>
+                  <span>300 000 руб</span>
                 </div>
               </div>
 
@@ -204,13 +204,13 @@ export default function InstallmentCalculator() {
                     className="w-48 text-xl h-12 text-gray-dark font-semibold border-gray-accent bg-white border-[2px]"
                   />
                   <span className="text-2xl text-gray-medium">
-                    ₽
+                    руб
                   </span>
-                  {cost > 0 && (
+                  {/* {cost > 0 && (
                     <span className="text-md text-gray-medium">
                       ({(((firstPayment || 0) / cost) * 100).toFixed(1)}%)
                     </span>
-                  )}
+                  )} */}
 
                 </div>
                 <Slider
@@ -222,8 +222,8 @@ export default function InstallmentCalculator() {
                   className="w-full"
                 />
                 <div className="flex justify-between text-md text-gray-medium">
-                  <span>0 ₽</span>
-                  <span>{(cost * 0.8).toLocaleString()} ₽</span>
+                  <span>0 руб</span>
+                  <span>{(cost * 0.8).toLocaleString()} руб</span>
                 </div>
               </div>
 
@@ -263,7 +263,7 @@ export default function InstallmentCalculator() {
                 </div>
               </div>
 
-              <div className="p-6 rounded-lg border-2 border-gold bg-[#01538F]">
+              <div className="p-6 rounded-lg bg-[#254f3b]">
                 <div className="grid md:grid-cols-2 gap-8">
                   {/* Левая часть - параметры и итоговая сумма */}
                   <div className="space-y-4">
@@ -271,16 +271,16 @@ export default function InstallmentCalculator() {
                       Ваш выбор:
                     </h3>
                     <div className="space-y-2 text-sm text-gray-accent">
-                      <p>Стоимость товара: {cost.toLocaleString()} ₽</p>
-                      <p>Первоначальный взнос: {firstPayment.toLocaleString()} ₽</p>
+                      <p>Стоимость товара: {cost.toLocaleString()} руб</p>
+                      <p>Первоначальный взнос: {firstPayment.toLocaleString()} руб</p>
                       <p>Срок рассрочки: {period} мес.</p>
                     </div>
                     <div className="pt-4 border-t" style={{ borderColor: "#808080" }}>
                       <p className="text-sm text-gray-accent">
                         Итоговая сумма:
                       </p>
-                      <p className="text-2xl font-bold text-gold">
-                        {result?.summaryPayment.toLocaleString()} ₽
+                      <p className="text-2xl font-bold text-[#c59f3a]">
+                        {result?.summaryPayment.toLocaleString()} руб
                       </p>
                     </div>
                   </div>
@@ -291,20 +291,20 @@ export default function InstallmentCalculator() {
                       <p className="text-lg text-gray-accent">
                         Ежемесячный платеж:
                       </p>
-                      <p className="text-4xl font-bold text-gold">
+                      <p className="text-4xl font-bold text-[#c59f3a]">
                         {result?.monthlyPayment.toLocaleString("ru-RU", {
                           minimumFractionDigits: 0,
                           maximumFractionDigits: 0,
                         })}{" "}
-                        ₽
+                        руб
                       </p>
                     </div>
                     <div className="text-center pt-4">
                       <p className="text-sm text-gray-accent">
                         Переплата в месяц:
                       </p>
-                      <p className="text-xl font-semibold text-gold">
-                        {result?.monthlyAdditionalPayment} ₽
+                      <p className="text-xl font-semibold text-[#c59f3a]">
+                        {result?.monthlyAdditionalPayment} руб
                       </p>
                     </div>
                   </div>
@@ -312,7 +312,7 @@ export default function InstallmentCalculator() {
               </div>
 
               <Button
-                className="w-full h-14 text-lg font-semibold flex items-center justify-center gap-3 bg-gold hover:bg-gold cursor-pointer"
+                className="w-full h-14 text-lg font-semibold flex items-center justify-center gap-3 bg-[#c59f3a] hover:bg-gold cursor-pointer"
                 onClick={() => {
                   if (cost < 10000 || period < 1) {
                     setShowWarning(true);
@@ -334,20 +334,20 @@ export default function InstallmentCalculator() {
       </section>
 
       {/* Conditions Section */}
-      <section id="conditions" className="py-10 px-4 sm:px-6 lg:px-8 bg-white">
+      <section id="conditions" className="py-10 px-4 sm:px-6 lg:px-8 bg-[#fefbf6]">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-6">
-            <h2 className="text-3xl font-bold text-white">
+            <h2 className="text-3xl font-bold text-[#164936]">
               Условия рассрочки
             </h2>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
             <Card
-              className="hover:shadow-lg transition-shadow bg-blue-light"
+              className="hover:shadow-lg transition-shadow bg-[#254f3b]"
             >
               <CardHeader>
-                <CardTitle className="text-2xl text-gray-medium">
+                <CardTitle className="text-2xl text-[#c59f3a]">
                   Возраст от 21 года
                 </CardTitle>
               </CardHeader>
@@ -359,10 +359,10 @@ export default function InstallmentCalculator() {
             </Card>
 
             <Card
-              className="hover:shadow-lg transition-shadow bg-blue-light"
+              className="hover:shadow-lg transition-shadow bg-[#254f3b]"
             >
               <CardHeader>
-                <CardTitle className="text-2xl text-gray-medium">
+                <CardTitle className="text-2xl text-[#c59f3a]">
                   Прописка по ЧР
                 </CardTitle>
               </CardHeader>
@@ -374,37 +374,37 @@ export default function InstallmentCalculator() {
             </Card>
 
             <Card
-              className="hover:shadow-lg transition-shadow bg-blue-light"
+              className="hover:shadow-lg transition-shadow bg-[#254f3b]"
             >
               <CardHeader>
-                <CardTitle className="text-2xl text-gray-medium">
-                  от 0 ₽ до 100 000 ₽
+                <CardTitle className="text-2xl text-[#c59f3a]">
+                  от 0 руб до 100 000 руб
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription className="text-base text-white-ease">
-                  Если сумма до 100 000 ₽ требуется один поручитель
+                  Если сумма до 100 000 руб требуется один поручитель
                 </CardDescription>
               </CardContent>
             </Card>
             <Card
-              className="hover:shadow-lg transition-shadow bg-blue-light"
+              className="hover:shadow-lg transition-shadow bg-[#254f3b]"
             >
               <CardHeader>
-                <CardTitle className="text-2xl text-gray-medium">
-                  От 100 000 ₽ до 300 000 ₽
+                <CardTitle className="text-2xl text-[#c59f3a]">
+                  От 100 000 руб до 300 000 руб
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription className="text-base text-white-ease">
-                  Если сумма от 100 000 ₽ до 300 000 ₽ требуется два поручителя
+                  Если сумма от 100 000 руб до 300 000 руб требуется два поручителя
                 </CardDescription>
               </CardContent>
             </Card>
           </div>
 
-          <div className="mt-12 p-8 rounded-lg bg-blue-light">
-            <h3 className="text-xl font-semibold mb-4 text-gray-medium">
+          <div className="mt-12 p-8 rounded-lg bg-[#254f3b]">
+            <h3 className="text-xl font-semibold mb-4 text-[#c59f3a]">
               Дополнительные преимущества:
             </h3>
             <ul className="space-y-2 text-white-ease">
@@ -430,10 +430,10 @@ export default function InstallmentCalculator() {
       </section>
 
       {/* Contacts Section */}
-      <section id="contacts" className="py-10 px-4 sm:px-6 lg:px-8 bg-blue-light">
+      <section id="contacts" className="py-10 px-4 sm:px-6 lg:px-8 bg-[#f2efea]">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4" style={{ color: "#f8f9fa" }}>
+            <h2 className="text-3xl font-bold mb-4 text-[#164936]">
               Контакты
             </h2>
           </div>
@@ -441,15 +441,15 @@ export default function InstallmentCalculator() {
           <div className="grid lg:grid-cols-2 gap-12">
             {/* Contact Info */}
             <div className="space-y-8">
-              <Card className="bg-white-acrill">
+              <Card className="bg-[#254f3b]">
                 <CardContent className="p-6">
                   <div className="space-y-6 text-gray-medium">
                     <div className="flex items-center space-x-4">
                       <div className="p-3" >
-                        <Phone className="h-6 w-6" />
+                        <Phone className="h-6 w-6 text-white" />
                       </div>
                       <div>
-                        <p className="font-semibold">
+                        <p className="font-semibold text-white">
                           Телефон
                         </p>
                         <a href="tel:+79284773444" className="hover:underline text-gold">
@@ -460,10 +460,10 @@ export default function InstallmentCalculator() {
 
                     <div className="flex items-center space-x-4">
                       <div className="p-3" >
-                        <MapPin className="h-6 w-6" />
+                        <MapPin className="h-6 w-6 text-white" />
                       </div>
                       <div>
-                        <p className="font-semibold">
+                        <p className="font-semibold text-white">
                           Адрес
                         </p>
                         <p className="text-gold">г. Грозный, ул. Ярославского, д. 12</p>
@@ -472,10 +472,10 @@ export default function InstallmentCalculator() {
 
                     {/* <div className="flex items-center space-x-4">
                       <div className="p-3" >
-                        <Instagram className="h-6 w-6" />
+                        <Instagram className="h-6 w-6 text-white" />
                       </div>
                       <div>
-                        <p className="font-semibold">
+                        <p className="font-semibold text-white">
                           Instagram
                         </p>
                         <a
@@ -491,10 +491,10 @@ export default function InstallmentCalculator() {
 
                     <div className="flex items-center space-x-4">
                       <div className="p-3" >
-                        <MessageCircle className="h-6 w-6" />
+                        <MessageCircle className="h-6 w-6 text-white" />
                       </div>
                       <div>
-                        <p className="font-semibold">
+                        <p className="font-semibold text-white">
                           WhatsApp
                         </p>
                         <a
@@ -509,7 +509,7 @@ export default function InstallmentCalculator() {
                     </div>
                   </div>
 
-                  <div className="mt-8 pt-6 border-t border-gray-medium">
+                  <div className="mt-8 pt-6 border-t border-[#f2efea] text-white">
                     <p className="text-sm mb-4">
                       Режим работы:
                     </p>

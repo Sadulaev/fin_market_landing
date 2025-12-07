@@ -72,11 +72,11 @@ function SubmitModal({ open, onOpenChange, data }: Props) {
         }
 
         const phoneNum = "79288958095"
-        const message = `Стоимость товара: ${data.cost} ₽
-Первый взнос: ${data.firstPayment} ₽
+        const message = `Стоимость товара: ${data.cost} руб
+Первый взнос: ${data.firstPayment} руб
 Срок рассрочки: ${data.period} месяцев
-Ежемесячный платеж: ${data.monthlyPayment} ₽
-Итоговая сумма: ${data.resultSum} ₽
+Ежемесячный платеж: ${data.monthlyPayment} руб
+Итоговая сумма: ${data.resultSum} руб
 
 Имя: ${firstName}
 Фамилия: ${lastName}
@@ -92,7 +92,7 @@ function SubmitModal({ open, onOpenChange, data }: Props) {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <form>
-                <DialogContent className="sm:max-w-[425px] max-h-[90vh] overflow-auto bg-white-acrill border-gray-accent text-gray-medium">
+                <DialogContent className="sm:max-w-[425px] max-h-[90vh] overflow-auto bg-[#fefbf6] border-gray-accent text-gray-medium">
                     <DialogHeader>
                         <DialogTitle>Заполните информацию</DialogTitle>
                         {/* <DialogDescription>
@@ -125,8 +125,8 @@ function SubmitModal({ open, onOpenChange, data }: Props) {
                         </div>
                         {showCalendar ? (
                             <div className="space-y-4 relative">
-                                <X onClick={() => setShowCalendar(false)} className="h-6 w-6 cursor-pointer absolute top-2 right-2" style={{ color: "#f8f9fa" }} />
-                                <Label className="" style={{ color: "#f8f9fa" }}>
+                                <X onClick={() => setShowCalendar(false)} className="h-6 w-6 cursor-pointer absolute top-2 right-2 !text-[#164936]" style={{ color: "#f8f9fa" }} />
+                                <Label className="text-[#164936]">
                                     Дата первого платежа
                                 </Label>
                                 <div className="flex flex-col items-center space-y-4 pt-3">
@@ -142,7 +142,7 @@ function SubmitModal({ open, onOpenChange, data }: Props) {
                                                 : "Выберите дату"}
                                         </span>
                                     </div> */}
-                                    <div className="p-4 rounded-lg border">
+                                    <div className="p-4 rounded-lg">
                                         <Calendar
                                             mode="single"
                                             required
@@ -156,6 +156,7 @@ function SubmitModal({ open, onOpenChange, data }: Props) {
                                             }}
                                             className="rounded-md bg-gray-dark border-gray-accent"
                                             classNames={{
+                                                month: 'text-white',
                                                 day: "text-white",
                                             }}
                                         />
