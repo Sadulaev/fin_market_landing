@@ -6,7 +6,8 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function encryptNumber(num: number): string {
-  const base = (num + 1000).toString(36);
+  const multiplied = Math.round(num * 1000);
+  const base = (multiplied + 1000).toString(36);
   return `f${base}t`;
 }
 
@@ -17,7 +18,8 @@ export function decryptNumber(encrypted: string): number {
     }
 
     const middle = encrypted.slice(1, -1);
-    const num = parseInt(middle, 36) - 1000;
+    const multiplied = parseInt(middle, 36) - 1000;
+    const num = multiplied / 1000;
 
     return isNaN(num) ? 5 : num;
   } catch {
