@@ -95,7 +95,7 @@ const Page = () => {
             </div>
 
             <hr />
-            <Input value={link} ref={linkInput} className="font-mono text-xs" />
+            <Input value={link} ref={linkInput} className="font-mono text-xs" readOnly />
             <Button ref={btnRef} className='h-12 text-base cursor-pointer' onClick={handleCopyClick}>Скопировать ссылку</Button>
         </div>
     )
