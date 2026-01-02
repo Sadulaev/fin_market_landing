@@ -11,8 +11,8 @@ import { YMaps, Map, Placemark } from '@pbe/react-yandex-maps';
 import { useSearchParams } from "next/navigation"
 import SubmitModal from "@/components/submit-modal"
 import WarningWindow from "@/components/warning-window"
-import { decryptNumber } from "@/lib/utils"
 import murabaha from '../public/assets/murabaha-logo.png'
+import { decryptNumber } from "@/lib/utils"
 
 export default function InstallmentCalculator() {
   const searchParams = useSearchParams();
@@ -60,16 +60,36 @@ export default function InstallmentCalculator() {
       }
     }
 
-    const countedSum = firstPayment >= (cost / 2) ? cost / 2 : cost;
-    const additionalPercent = firstPayment >= (cost * 0.25) ? 0 : 1;
-    const percent = decryptNumber(k || '') + additionalPercent;
+    const paymentRatio = firstPayment / cost;
+    
+    // Получаем проценты из параметров URL
+    const p1 = searchParams.get('p1') ? decryptNumber(searchParams.get('p1')!) : 6;
+    const p2 = searchParams.get('p2') ? decryptNumber(searchParams.get('p2')!) : 5;
+    const p3 = searchParams.get('p3') ? decryptNumber(searchParams.get('p3')!) : 2.5;
+    
+    // Выбираем процент в зависимости от размера первого взноса
+    let percent: number;
+    
+    if (paymentRatio < 0.25) {
+      percent = p1;
+    } else if (paymentRatio < 0.5) {
+      percent = p2;
+    } else {
+      percent = p3;
+    }
+
+    // Процент применяется к полной сумме
+    const percentageAmount = (cost / 100) * percent;
+    const summaryPayment = cost + percentageAmount;
+    const monthlyPayment = (summaryPayment - firstPayment) / period;
+    const monthlyAdditionalPayment = percentageAmount / period;
 
     return {
-      monthlyPayment: ((cost + ((countedSum / 100 * percent) * period)) - firstPayment) / period,
-      summaryPayment: cost + ((countedSum / 100 * percent) * period),
-      monthlyAdditionalPayment: (countedSum / 100 * percent),
+      monthlyPayment: monthlyPayment,
+      summaryPayment: summaryPayment,
+      monthlyAdditionalPayment: monthlyAdditionalPayment,
     }
-  }, [cost, firstPayment, period])
+  }, [cost, firstPayment, period, searchParams])
 
   const scrollToSection = (sectionId: string) => {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" })
@@ -280,7 +300,10 @@ export default function InstallmentCalculator() {
                         Итоговая сумма:
                       </p>
                       <p className="text-2xl font-bold text-[#c59f3a]">
-                        {result?.summaryPayment.toLocaleString()} руб
+                        {result?.summaryPayment.toLocaleString("ru-RU", {
+                          minimumFractionDigits: 0,
+                          maximumFractionDigits: 0,
+                        })} руб
                       </p>
                     </div>
                   </div>
@@ -304,7 +327,10 @@ export default function InstallmentCalculator() {
                         Переплата в месяц:
                       </p>
                       <p className="text-xl font-semibold text-[#c59f3a]">
-                        {result?.monthlyAdditionalPayment} руб
+                        {result?.monthlyAdditionalPayment.toLocaleString("ru-RU", {
+                          minimumFractionDigits: 0,
+                          maximumFractionDigits: 0,
+                        })} руб
                       </p>
                     </div>
                   </div>
