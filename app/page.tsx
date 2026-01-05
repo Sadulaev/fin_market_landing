@@ -60,8 +60,8 @@ export default function InstallmentCalculator() {
       }
     }
 
-    const countedSum = firstPayment >= (cost / 2) ? cost / 2 : cost;
-    const additionalPercent = firstPayment >= (cost * 0.25) ? 0 : 1;
+    const countedSum = firstPayment >= (cost / 2) ? cost - firstPayment : cost;
+    const additionalPercent = firstPayment >= (cost * 0.25) ? 0 : 5;
     const percent = decryptNumber(k || '') + additionalPercent;
 
     return {
